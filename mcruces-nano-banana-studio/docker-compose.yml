@@ -9,5 +9,5 @@ services:
 
   web:
     # Tag and digest are updated automatically by .github/workflows/docker-publish.yml
-    image: ghcr.io/inteligencioartificelio/nano-banana-studio:2.5.0
+    image: ghcr.io/inteligencioartificelio/nano-banana-studio:2.5.0@sha256:e4f3f188cae42188e57fb48609f6e7604030fc376d303b057a2d736880c1bb93
     restart: on-failure
