@@ -1,0 +1,13 @@
+version: "3.7"
+
+services:
+  app_proxy:
+    environment:
+      # <app-id>_<service-name>_1
+      APP_HOST: mcruces-nano-banana-studio_web_1
+      APP_PORT: 8080
+
+  web:
+    # Tag and digest are updated automatically by .github/workflows/docker-publish.yml
+    image: ghcr.io/inteligencioartificelio/nano-banana-studio:2.5.0
+    restart: on-failure

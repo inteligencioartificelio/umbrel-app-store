@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.github
+mcruces-nano-banana-studio
+umbrel-app-store.yml
+src/tests
+*.md
+.DS_Store

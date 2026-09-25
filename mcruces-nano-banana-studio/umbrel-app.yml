@@ -1,0 +1,47 @@
+manifestVersion: 1
+id: mcruces-nano-banana-studio
+category: ai
+name: Nano Banana Studio
+version: "2.5.0"
+tagline: Estudio de generación, edición y reescalado de imágenes 4K con Google AI
+icon: https://raw.githubusercontent.com/inteligencioartificelio/umbrel-app-store/main/assets/icon.svg
+description: >-
+  ⚠️ Necesitas una API key de Google AI Studio (https://aistudio.google.com/apikey).
+  Se introduce la primera vez que abres la app y se guarda solo en tu navegador.
+
+
+  ℹ️ La galería, los estilos y la configuración se guardan en el navegador (IndexedDB),
+  no en el servidor. Cada dirección desde la que abres la app (umbrel.local, la IP,
+  Tailscale…) tiene su propia galería. Usa la opción de exportar la base de datos
+  para hacer copias de seguridad o moverla entre navegadores.
+
+
+  Nano Banana Studio es una estación de trabajo para creadores visuales:
+
+
+  - Generación de imágenes hasta 4K con varios modelos, proporciones y hasta 4 variantes en paralelo
+
+  - Magic Prompt para enriquecer prompts con terminología fotográfica profesional
+
+  - Editor multimodal con pines y áreas para ediciones localizadas y transferencia de estilo
+
+  - Reescalado a 2K y 4K, comparador antes/después y exportación a 300 DPI
+
+  - Galería con filtros, operaciones por lotes y catálogo de estilos visuales
+releaseNotes: ""
+
+developer: Mike Cruces
+website: https://github.com/inteligencioartificelio/umbrel-app-store
+dependencies: []
+repo: https://github.com/inteligencioartificelio/umbrel-app-store
+support: https://github.com/inteligencioartificelio/umbrel-app-store/issues
+
+port: 4747
+gallery: []
+path: ""
+
+defaultUsername: ""
+defaultPassword: ""
+
+submitter: Mike Cruces
+submission: https://github.com/inteligencioartificelio/umbrel-app-store
