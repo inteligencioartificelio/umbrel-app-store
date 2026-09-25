@@ -9,7 +9,7 @@ services:
 
   web:
     # Tag and digest are updated automatically by .github/workflows/gods-eye-view-publish.yml
-    image: ghcr.io/inteligencioartificelio/gods-eye-view:0.1.1-b210ab0
+    image: ghcr.io/inteligencioartificelio/gods-eye-view:0.1.1-b210ab0@sha256:ed458f761cca3decd77cd31cb210c2144e2d6572212362e93a466b185a9dda62
     user: "1000:1000"
     init: true
     restart: on-failure
