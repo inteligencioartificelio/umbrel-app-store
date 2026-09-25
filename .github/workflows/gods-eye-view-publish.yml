@@ -1,0 +1,82 @@
+name: Build & publish God's Eye View image
+
+# Builds a multi-arch (amd64 + arm64) image, pushes it to GHCR tagged with the
+# version from umbrel-app.yml, and pins that tag@digest in docker-compose.yml.
+# Bump `version` in umbrel-app.yml so umbrelOS offers the update.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps-src/gods-eye-view/**"
+      - "mcruces-gods-eye-view/umbrel-app.yml"
+      - ".github/workflows/gods-eye-view-publish.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: gods-eye-view-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  packages: write
+
+env:
+  APP_DIR: mcruces-gods-eye-view
+  IMAGE_NAME: gods-eye-view
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Resolve image name and version
+        id: meta
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          version="$(sed -nE 's/^version:[[:space:]]*"?([^"]+)"?[[:space:]]*$/\1/p' "$APP_DIR/umbrel-app.yml")"
+          if [ -z "$version" ]; then echo "No version found in umbrel-app.yml" >&2; exit 1; fi
+          echo "image=ghcr.io/${owner}/${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+
+      # The runtime stage runs npm ci for arm64 (native rollup/esbuild binaries)
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: apps-src/gods-eye-view
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}
+            ${{ steps.meta.outputs.image }}:latest
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.title=God's Eye View
+            org.opencontainers.image.version=${{ steps.meta.outputs.version }}
+          cache-from: type=gha,scope=gods-eye-view
+          cache-to: type=gha,mode=max,scope=gods-eye-view
+
+      - name: Pin image digest in docker-compose.yml
+        env:
+          REF: ${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.version }}@${{ steps.build.outputs.digest }}
+        run: |
+          sed -i -E "s#^([[:space:]]*image:[[:space:]]*)ghcr\.io/[^[:space:]]+/${IMAGE_NAME}:.*#\1${REF}#" "$APP_DIR/docker-compose.yml"
+          grep -n "image:" "$APP_DIR/docker-compose.yml"
+          if git diff --quiet; then echo "Compose already up to date"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore: pin ${IMAGE_NAME} ${{ steps.meta.outputs.version }} image digest"
+          git pull --rebase
+          git push

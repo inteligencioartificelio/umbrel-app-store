@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  app_proxy:
+    environment:
+      # <app-id>_<service-name>_1
+      APP_HOST: mcruces-gods-eye-view_web_1
+      APP_PORT: 4173
+
+  web:
+    # Tag and digest are updated automatically by .github/workflows/gods-eye-view-publish.yml
+    image: ghcr.io/inteligencioartificelio/gods-eye-view:0.1.1-b210ab0
+    user: "1000:1000"
+    init: true
+    restart: on-failure
+    environment:
+      # Upstream defaults to oauth, which fails without credentials
+      OPENSKY_AUTH_MODE: auto
+    volumes:
+      - ${APP_DATA_DIR}/data/cache:/app/.gev-cache

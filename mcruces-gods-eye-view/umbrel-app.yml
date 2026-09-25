@@ -1,0 +1,115 @@
+manifestVersion: 1
+id: mcruces-gods-eye-view
+category: media
+name: God's Eye View
+version: "0.1.1-b210ab0"
+tagline: Consola de inteligencia en tiempo real sobre un globo 3D fotorrealista
+icon: https://raw.githubusercontent.com/inteligencioartificelio/umbrel-app-store/main/assets/gods-eye-view.svg
+description: >-
+  ⚙️ Funciona sin API keys (imágenes de Esri/OSM y fuentes públicas). Para activar más capas,
+  abre los ajustes de la app en umbrelOS y rellena las claves en "Environment variables";
+  la app se reinicia y las aplica. El panel "Provider Settings" de la propia app no está
+  disponible en esta instalación.
+
+
+  ⚠️ GOOGLE_MAPS_API_KEY y CESIUM_ION_TOKEN se envían al navegador por diseño: restríngelas
+  en sus consolas. El resto de claves se quedan en el servidor. Por HTTP, el control por voz
+  (micrófono) y el SDR por USB no están disponibles, porque el navegador exige HTTPS.
+
+
+  God's Eye View es una consola de inteligencia geoespacial para todo el planeta, construida
+  sobre CesiumJS:
+
+
+  - Globo 3D fotorrealista (Google 3D Tiles con clave, Esri/OSM sin ella)
+
+  - Aviones, aviación militar, barcos (AIS), satélites y lanzamientos en directo
+
+  - Terremotos, incendios (NASA FIRMS), meteorología, tráfico y transporte público
+
+  - Cámaras CCTV públicas, cables submarinos, infraestructuras y radio
+
+  - Control por voz con OpenAI Realtime (opcional)
+
+
+  Empaquetado del proyecto open source de Bilawal Sidhu (licencia MIT), commit b210ab0.
+releaseNotes: ""
+
+developer: Bilawal Sidhu
+website: https://github.com/bilawalsidhu/gods-eye-view
+dependencies: []
+repo: https://github.com/bilawalsidhu/gods-eye-view
+support: https://github.com/bilawalsidhu/gods-eye-view/issues
+
+port: 4748
+gallery: []
+path: ""
+
+defaultUsername: ""
+defaultPassword: ""
+
+backupIgnore:
+  - data/cache/*
+
+environment:
+  - name: GOOGLE_MAPS_API_KEY
+    services:
+      - web
+    note: Google Photorealistic 3D Tiles y búsqueda de lugares. Se expone al navegador, así que restríngela por HTTP referrer y API (Map Tiles, Geocoding).
+  - name: GOOGLE_MAPS_SERVER_API_KEY
+    services:
+      - web
+    note: Opcional. Clave de Google separada, solo para el servidor (Places y Street View). Si no la pones, se usa GOOGLE_MAPS_API_KEY.
+  - name: CESIUM_ION_TOKEN
+    services:
+      - web
+    note: Token de Cesium ion (assets:read) para Google 3D vía ion, Bing y Cesium World Terrain. Se expone al navegador.
+  - name: OPENAI_API_KEY
+    services:
+      - web
+    note: Control por voz con OpenAI Realtime y resúmenes del HUD. Solo servidor. El micrófono requiere abrir la app por HTTPS.
+  - name: AISSTREAM_API_KEY
+    services:
+      - web
+    note: Barcos en directo (capa AIS) desde aisstream.io. Solo servidor.
+  - name: FIRMS_MAP_KEY
+    services:
+      - web
+    note: Incendios activos de NASA FIRMS (clave gratuita en firms.modaps.eosdis.nasa.gov/api/map_key). Solo servidor.
+  - name: TOMTOM_API_KEY
+    services:
+      - web
+    note: Tráfico en directo de TomTom. Solo servidor.
+  - name: OPENSKY_CLIENT_ID
+    services:
+      - web
+    note: Credenciales OAuth de OpenSky Network para aviones con más cuota. Sin ellas se usa acceso anónimo.
+  - name: OPENSKY_CLIENT_SECRET
+    services:
+      - web
+    note: Secreto OAuth de OpenSky Network (va con OPENSKY_CLIENT_ID).
+  - name: OPENSKY_AUTH_MODE
+    services:
+      - web
+    default: auto
+    options:
+      - auto
+      - oauth
+      - basic
+      - anon
+    note: auto prueba OAuth, luego Basic y por último anónimo.
+  - name: LL2_API_TOKEN
+    services:
+      - web
+    note: Opcional. Token de Launch Library 2 para más peticiones de lanzamientos espaciales.
+  - name: GEV_RATELIMIT_OPENAI_PER_MIN
+    services:
+      - web
+    note: Opcional. Límite de peticiones por minuto a los endpoints de OpenAI, para acotar el gasto. Vacío significa sin límite.
+  - name: GEV_RATELIMIT_GOOGLE_PER_MIN
+    services:
+      - web
+    note: Opcional. Límite de peticiones por minuto a Google Places. Vacío significa sin límite.
+
+submitter: Mike Cruces
+submission: https://github.com/inteligencioartificelio/umbrel-app-store

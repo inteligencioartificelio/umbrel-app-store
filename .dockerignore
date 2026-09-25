@@ -7,3 +7,6 @@ umbrel-app-store.yml
 src/tests
 *.md
 .DS_Store
+apps-src
+mcruces-gods-eye-view
+assets
